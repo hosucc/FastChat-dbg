@@ -157,7 +157,7 @@ def raise_warning_for_incompatible_cpu_offloading_configuration(
     return cpu_offloading
 
 
-def (
+def load_model(
     model_path: str,
     device: str = "cuda",
     num_gpus: int = 1,
