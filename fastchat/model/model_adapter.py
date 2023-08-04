@@ -61,34 +61,44 @@ class BaseModelAdapter:
         return True
 
     def load_model(self, model_path: str, from_pretrained_kwargs: dict):
-        logger.info(f"BaseModelAdapter load_model 1...")
-        logger.info(f"BaseModelAdapter kwargs: {from_pretrained_kwargs}")
+        logger.info(f"Loading model from path: {model_path}")
+        logger.info(f"Arguments: {from_pretrained_kwargs}")
         revision = from_pretrained_kwargs.get("revision", "main")
-        logger.info(f"BaseModelAdapter load_model 2...")
         try:
+            logger.info(f"BaseModelAdapter load_model 1...")
+            logger.info(f"BaseModelAdapter kwargs: {from_pretrained_kwargs}")
+            logger.info(f"BaseModelAdapter load_model 2...")
             tokenizer = AutoTokenizer.from_pretrained(
                 model_path,
                 use_fast=self.use_fast_tokenizer,
                 revision=revision,
             )
             logger.info(f"BaseModelAdapter load_model 3-1...")
-        except TypeError:
+        except TypeError as e:
+            logger.error(f"Error loading tokenizer: {str(e)}")
             tokenizer = AutoTokenizer.from_pretrained(
                 model_path,
                 use_fast=False,
                 revision=revision,
             )
             logger.info(f"BaseModelAdapter load_model 3-2...")
+        except Exception as e:
+            logger.error(f"Unhandled exception loading tokenizer: {str(e)}")
+            raise
         try:
             model = AutoModelForCausalLM.from_pretrained(
                 model_path, low_cpu_mem_usage=True, **from_pretrained_kwargs
             )
             logger.info(f"BaseModelAdapter load_model 4-1...")
-        except NameError:
+        except NameError as e:
+            logger.error(f"Error loading model: {str(e)}")
             model = AutoModel.from_pretrained(
                 model_path, low_cpu_mem_usage=True, **from_pretrained_kwargs
             )
             logger.info(f"BaseModelAdapter load_model 4-2...")
+        except Exception as e:
+            logger.error(f"Unhandled exception loading model: {str(e)}")
+            raise
         return model, tokenizer
 
     def load_compress_model(self, model_path, device, torch_dtype, revision="main"):
