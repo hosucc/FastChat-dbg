@@ -38,7 +38,11 @@ from fastchat.model.model_falcon import generate_stream_falcon
 from fastchat.model.monkey_patch_non_inplace import (
     replace_llama_attn_with_non_inplace_operations,
 )
-from fastchat.utils import get_gpu_memory
+from fastchat.utils import get_gpu_memory, build_logger
+
+
+loader_id = str(uuid.uuid4())[:8]
+logger = build_logger("model_loader", f"model_loader_{loader_id}.log")
 
 # Check an environment variable to check if we should be sharing Peft model
 # weights.  When false we treat all Peft models as separate.
