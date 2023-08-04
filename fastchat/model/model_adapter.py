@@ -5,6 +5,7 @@ import os
 import sys
 from typing import Dict, List, Optional
 import warnings
+import uuid
 
 if sys.version_info >= (3, 9):
     from functools import cache
