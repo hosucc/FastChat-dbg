@@ -62,6 +62,7 @@ class BaseModelAdapter:
 
     def load_model(self, model_path: str, from_pretrained_kwargs: dict):
         logger.info(f"BaseModelAdapter load_model 1...")
+        logger.info(f"BaseModelAdapter kwargs: {from_pretrained_kwargs}")
         revision = from_pretrained_kwargs.get("revision", "main")
         logger.info(f"BaseModelAdapter load_model 2...")
         try:
