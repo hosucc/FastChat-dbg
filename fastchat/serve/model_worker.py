@@ -214,15 +214,22 @@ class ModelWorker(BaseModelWorker):
             gptq_config=gptq_config,
             awq_config=awq_config,
         )
+        logger.info(f"Loading the model 1...")
         self.device = device
         if self.tokenizer.pad_token == None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
+        logger.info(f"Loading the model 2...")
         self.context_len = get_context_length(self.model.config)
+        logger.info(f"Loading the model 3...")
         self.generate_stream_func = get_generate_stream_function(self.model, model_path)
+        logger.info(f"Loading the model 4...")
         self.stream_interval = stream_interval
+        logger.info(f"Loading the model 5...")
 
         if not no_register:
+            logger.info(f"Loading the model 6-0...")
             self.init_heart_beat()
+        logger.info(f"Loading the model 6-1...")
 
     def generate_stream_gate(self, params):
         self.call_ct += 1
