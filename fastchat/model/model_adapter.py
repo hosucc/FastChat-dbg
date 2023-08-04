@@ -160,12 +160,15 @@ def load_model(
 ):
     """Load a model from Hugging Face."""
     # get model adapter
+    logger.info(f"load_model 1...")
     adapter = get_model_adapter(model_path)
 
     # Handle device mapping
+    logger.info(f"load_model 2...")
     cpu_offloading = raise_warning_for_incompatible_cpu_offloading_configuration(
         device, load_8bit, cpu_offloading
     )
+    logger.info(f"load_model 3...")
     if device == "cpu":
         kwargs = {"torch_dtype": torch.float32}
     elif device == "cuda":
@@ -199,6 +202,7 @@ def load_model(
     else:
         raise ValueError(f"Invalid device: {device}")
 
+    logger.info(f"load_model 4...")
     if cpu_offloading:
         # raises an error on incompatible platforms
         from transformers import BitsAndBytesConfig
@@ -266,6 +270,7 @@ def load_model(
     kwargs["revision"] = revision
 
     # Load model
+    logger.info(f"load_model 5...")
     model, tokenizer = adapter.load_model(model_path, kwargs)
 
     if (device == "cuda" and num_gpus == 1 and not cpu_offloading) or device in (
@@ -274,12 +279,15 @@ def load_model(
     ):
         model.to(device)
 
+    logger.info(f"load_model 6...")
     if device == "xpu":
         model = torch.xpu.optimize(model, dtype=kwargs["torch_dtype"], inplace=True)
 
+    logger.info(f"load_model 7...")
     if debug:
         print(model)
 
+    logger.info(f"load_model 8...")
     return model, tokenizer
 
 
