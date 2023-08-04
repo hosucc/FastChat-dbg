@@ -61,27 +61,33 @@ class BaseModelAdapter:
         return True
 
     def load_model(self, model_path: str, from_pretrained_kwargs: dict):
+        logger.info(f"BaseModelAdapter load_model 1...")
         revision = from_pretrained_kwargs.get("revision", "main")
+        logger.info(f"BaseModelAdapter load_model 2...")
         try:
             tokenizer = AutoTokenizer.from_pretrained(
                 model_path,
                 use_fast=self.use_fast_tokenizer,
                 revision=revision,
             )
+            logger.info(f"BaseModelAdapter load_model 3-1...")
         except TypeError:
             tokenizer = AutoTokenizer.from_pretrained(
                 model_path,
                 use_fast=False,
                 revision=revision,
             )
+            logger.info(f"BaseModelAdapter load_model 3-2...")
         try:
             model = AutoModelForCausalLM.from_pretrained(
                 model_path, low_cpu_mem_usage=True, **from_pretrained_kwargs
             )
+            logger.info(f"BaseModelAdapter load_model 4-1...")
         except NameError:
             model = AutoModel.from_pretrained(
                 model_path, low_cpu_mem_usage=True, **from_pretrained_kwargs
             )
+            logger.info(f"BaseModelAdapter load_model 4-2...")
         return model, tokenizer
 
     def load_compress_model(self, model_path, device, torch_dtype, revision="main"):
@@ -151,7 +157,7 @@ def raise_warning_for_incompatible_cpu_offloading_configuration(
     return cpu_offloading
 
 
-def load_model(
+def (
     model_path: str,
     device: str = "cuda",
     num_gpus: int = 1,
@@ -167,6 +173,7 @@ def load_model(
     # get model adapter
     logger.info(f"load_model 1...")
     adapter = get_model_adapter(model_path)
+    logger.info(f"load_model adapter = {adapter.__class__.__name__}")
 
     # Handle device mapping
     logger.info(f"load_model 2...")
